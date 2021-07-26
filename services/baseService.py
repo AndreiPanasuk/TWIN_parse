@@ -10,17 +10,22 @@ from utils import get_err_info, t_str
     Базовый класс для сервисов
     
     Параметры инициализации:
-        name    str    название сервиса
+        name      str     название сервиса
+        config    dict    конфигурация системы
         
 '''
 class BaseService(object):
     _Lock = RLock           # класс блокировки для переменных доступных из разных потоков 
     _wait_timeout = 3       # задержка между запусками сервиса
     
-    def __init__(self, name):
-        self._name = name
+    def __init__(self, name, config = None):
+        self._name = f'{self.__class__.__name__}({name})'
         self._exit_lock = self._Lock()
         self._exit_flg = None
+        self.init_interfaces(config)
+    
+    def init_interfaces(self, config):
+        pass
     
     @property
     def name(self):
