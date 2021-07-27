@@ -63,3 +63,16 @@ class FileInterface(object):
             return os.path.join(self._base_path, fname)
         else:
             return fname
+        
+    ''' dir
+    
+        Итератор имен файлов в каталоге
+        Параметры:
+            path    str    - относительный путь к каталогу
+        
+    '''   
+    def dir(self, path):
+        fpath = self.full_path(path)
+        for _, _, files in os.walk(fpath):
+            for fname in files:
+                yield fname
