@@ -8,7 +8,9 @@ class TWINService(BaseService):
     
     def __init__(self, name, config = None):
         super().__init__(name, config = config)
-        # инициализация данных результата работы
+        # инициализация данных результатов работы
+        for p in ('output', 'errors', 'input', 'processed'):
+            self._ifile.create_path(p)
         if self._ifile.exists('output/result.json'):
             data = self._ifile.get('output/result.json')
             self._data = data[0]

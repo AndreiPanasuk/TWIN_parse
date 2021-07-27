@@ -24,7 +24,8 @@ class BaseService(object):
         self._exit_flg = None
         log_level = config.get('log_level', 'NOTSET')
         self._log_err_flg = log_level in ('ERROR', 'DEBUG')
-        self._log_flg = log_level in ('DEBUG',)        
+        self._log_flg = log_level in ('DEBUG',) 
+        self._wait_timeout = config.get('wait_timeout') or self._wait_timeout      
         self.init_interfaces(config)
     
     def init_interfaces(self, config):

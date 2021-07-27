@@ -1,4 +1,5 @@
 {
+	"wait_timeout": 3,
 	"files": {
 		"base_path": "data",
 		"ident": 2

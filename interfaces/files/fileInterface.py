@@ -102,3 +102,15 @@ class FileInterface(BaseInterface):
     def exists(self, path):
         fpath = self.full_path(path)
         return os.path.exists(fpath)
+
+    ''' exists
+    
+        Создание каталога, если не существкет
+        Параметры:
+            path    str    - относительный путь
+    
+    '''   
+    def create_path(self, path):
+        fpath = self.full_path(path)
+        if not os.path.exists(fpath):
+            os.makedirs(fpath)
