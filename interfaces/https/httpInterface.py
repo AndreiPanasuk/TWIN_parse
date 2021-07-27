@@ -19,8 +19,11 @@
 import time
 import requests
 from requests.compat import urljoin
+from interfaces.baseInterface import BaseInterface
 
-class HTTPInterface(object):
+class HTTPInterface(BaseInterface):
+    
+    ConnectionError = requests.exceptions.ConnectionError
     
     def __init__(self, name, base_url = None, encoding = 'UTF8', user = None, passw = None,
                  timeout = 1, max_count = 3):
@@ -111,6 +114,20 @@ class HTTPInterface(object):
         self.auth(session)
         return session 
 
+    def get_session(self):
+        if self._session is None:
+            self._session = self.create_session()
+        return self._session
+    
+    def close_session(self):
+        if self._session is not None:
+            self._session.close()
+            self._session = None
+
+    def close(self):
+        self.close_session()
+        
+
     ''' auth
     
         Установить параметры базовой аутентификации для сессии
@@ -122,6 +139,17 @@ class HTTPInterface(object):
         if self._user:
             session.auth = (self._user, self._passw)
     
+    ''' _make_req
+    
+        Выполнение запроса
+        Параметры:
+            method str    - метод запроса ("get", "post"), 
+            url    str    - относительный URL
+            timeout      int    - максимальное время ожидания ответа
+            encoding     str    - кодировка ответа (может принимать значение "json")
+            **params    dict    - параметры (метод "get") или данные (метод "post") запроса
+    
+    '''   
     def _make_req(self, method, url, timeout, encoding, **params):
         furl = self.full_url(url)
         cnt = 0
@@ -145,7 +173,7 @@ class HTTPInterface(object):
                 self.close_session()
                 raise e
             except Exception as e:
-                if cnt >= self._max_req_count:
+                if cnt >= self._max_count:
                     self.close_session()
                     raise e
                 else:

@@ -22,9 +22,15 @@ class BaseService(object):
         self._name = f'{self.__class__.__name__}({name})'
         self._exit_lock = self._Lock()
         self._exit_flg = None
+        log_level = config.get('log_level', 'NOTSET')
+        self._log_err_flg = log_level in ('ERROR', 'DEBUG')
+        self._log_flg = log_level in ('DEBUG',)        
         self.init_interfaces(config)
     
     def init_interfaces(self, config):
+        pass
+    
+    def close_interfaces(self):
         pass
     
     @property
@@ -53,10 +59,7 @@ class BaseService(object):
     '''   
     def run(self):
         while not self.exit_flg:  
-            try:         
-                self.work()
-            except:
-                self.log_error()
+            self.work()
             self.wait()
         self.close()    
     
@@ -74,7 +77,7 @@ class BaseService(object):
         
     '''   
     def wait(self):
-        time.sleep(self._refresh_timeout)
+        time.sleep(self._wait_timeout)
     
     ''' close
     
@@ -83,16 +86,18 @@ class BaseService(object):
     '''   
     def close(self):
         self.exit_flg = True
-
+        self.close_interfaces()
     
     ''' log_error
     
         Логирование описания и трассировки текущей ошибки 
         
     '''   
-    def log_error(self):
-        txt = get_err_info()
-        print(f'ERROR: {t_str()}: {self.name}:', txt)
+    def log_error(self, only_name = None):
+        txt = get_err_info(only_name = only_name)
+        if self._log_err_flg:
+            print(f'ERROR: {t_str()}: {self.name}:', txt)
+        return txt
 
     ''' log
     
@@ -101,4 +106,5 @@ class BaseService(object):
             *args - данные для логирования
     '''   
     def log(self, *args):
-        print(f'{t_str()} {self.name}:', *args)
+        if self._log_flg:
+            print(f'{t_str()} {self.name}:', *args)

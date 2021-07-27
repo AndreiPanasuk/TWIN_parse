@@ -1,0 +1,14 @@
+{
+	"files": {
+		"base_path": "data",
+		"ident": 2
+	},
+	"parser": {
+		"base_url": "https://sandbox.twin24.ai/parse",
+		"encoding": "json"
+	},
+	"errors": {
+		"base_path": "data/errors"
+	},
+	"log_level": "DEBUG"
+}

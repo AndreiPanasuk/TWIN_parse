@@ -14,12 +14,13 @@
         
 '''
 import os
+from interfaces.baseInterface import BaseInterface
 
-class FileInterface(object):
+class FileInterface(BaseInterface):
     
     def __init__(self, name, base_path = None, encoding = 'UTF8'):
         super().__init__(name)
-        self._base_path = os.path.normpath(base_path)
+        self._base_path = os.path.normpath(base_path) if base_path else base_path
         self._encoding = encoding
     
     ''' get
@@ -76,3 +77,28 @@ class FileInterface(object):
         for _, _, files in os.walk(fpath):
             for fname in files:
                 yield fname
+    
+    ''' move
+    
+        Перемещение/переименование файла в базовом каталоге
+        Параметры:
+            fpath_from    str    - относительный путь к начальному файлу
+            fpath_to    str    - относительный путь к конечному файлу
+        
+    '''   
+    def move(self, fpath_from, fpath_to):
+        fpath_from = self.full_path(fpath_from)
+        fpath_to = self.full_path(fpath_to)
+        return os.rename(fpath_from, fpath_to)
+    
+    ''' exists
+    
+        Проверка существования файла/каталога
+        Параметры:
+            path    str    - относительный путь
+        Возврат:
+            bool    - True, если файл/каталог существует, иначе False
+    '''   
+    def exists(self, path):
+        fpath = self.full_path(path)
+        return os.path.exists(fpath)

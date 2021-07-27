@@ -35,20 +35,11 @@ class BaseInterface(object):
     def get(self, *args, **kargs):
         raise NotImplementedError('Метод "get" должен быть переопределен')
     
-    ''' log_error
     
-        Логирование описания и трассировки текущей ошибки 
+    ''' close
+    
+        Завершение работы
         
     '''   
-    def log_error(self):
-        txt = get_err_info()
-        print(f'ERROR: {t_str()}: {self.name}:', txt)
-
-    ''' log
-    
-        Логирование данных
-        Параметры:
-            *args - данные для логирования
-    '''   
-    def log(self, *args):
-        print(f'{t_str()} {self.name}:', *args)
+    def close(self):
+        pass

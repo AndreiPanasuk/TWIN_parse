@@ -8,6 +8,7 @@
 import sys
 import traceback
 import datetime
+from threading import Thread
 
 ''' get_err_info
 
@@ -55,4 +56,25 @@ def get_err_info(only_name = None):
 def t_str():
     return datetime.datetime.now().strftime("%H:%M:%S.%f")[:-3]
 
+''' make_thread
+    
+    Создание потока
+    
+    Параметры:
+    args
+        handler     function    - функция выполнения в потоке, 
+        *args        list       - параметры функции
+    kargs
+        name     str     - название потока, 
+        daemon   bool    - флаг "демон", 
+        **kwargs dict    - ключевые параметры потока
+        
+    Возврат:
+        threading.Thread    - созданный поток
+'''
+def make_thread(handler, *args, name = None, daemon = None, **kwargs):
+    thread = Thread(target = handler, name = name, args=args, kwargs=kwargs)
+    thread.daemon = daemon
+    thread.start()
+    return thread
     

@@ -15,8 +15,9 @@
 '''
 import json
 import codecs
+from .fileInterface import FileInterface
 
-class JSONInterface(object):
+class JSONInterface(FileInterface):
 
     def __init__(self, *args, ident = 4, **kargs):
         super().__init__(*args, **kargs)
